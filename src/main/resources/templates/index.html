@@ -225,7 +225,7 @@
                     <article class="result-card">
                         <span>Período</span>
                         <strong
-                                th:text="${result.numberOfMonths() + ' meses'}"
+                                th:text="|${result.numberOfMonths()} ${result.numberOfMonths() == 1 ? 'mês' : 'meses'}|"
                         ></strong>
                     </article>
                 </div>

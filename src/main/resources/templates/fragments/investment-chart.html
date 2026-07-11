@@ -51,12 +51,22 @@
     </div>
 
     <div id="investmentChartData" hidden>
+    <span
+            th:with="firstMonth=${result.monthlyEvolution().get(0)}"
+            th:data-date="${#temporals.format(
+                firstMonth.referenceDate().minusMonths(1),
+                'MM/yyyy'
+            )}"
+            th:data-invested="${firstMonth.openingBalance()}"
+            th:data-balance="${firstMonth.openingBalance()}"
+    ></span>
+
         <span
                 th:each="month : ${result.monthlyEvolution()}"
                 th:data-date="${#temporals.format(
-                    month.referenceDate(),
-                    'MM/yyyy'
-                )}"
+                month.referenceDate(),
+                'MM/yyyy'
+            )}"
                 th:data-invested="${month.totalInvested()}"
                 th:data-balance="${month.closingBalance()}"
         ></span>

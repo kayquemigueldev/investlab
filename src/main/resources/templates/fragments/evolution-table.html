@@ -17,7 +17,9 @@
 
         <div class="evolution-summary">
             <span>Período calculado</span>
-            <strong th:text="|${result.numberOfMonths()} meses|"></strong>
+            <strong
+                    th:text="|${result.numberOfMonths()} ${result.numberOfMonths() == 1 ? 'mês' : 'meses'}|"
+            ></strong>
         </div>
     </div>
 
