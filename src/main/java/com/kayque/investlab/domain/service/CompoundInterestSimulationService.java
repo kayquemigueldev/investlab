@@ -1,10 +1,11 @@
 package com.kayque.investlab.domain.service;
 
 import com.kayque.investlab.domain.enums.ContributionTiming;
-import com.kayque.investlab.domain.enums.RatePeriod;
 import com.kayque.investlab.domain.model.MonthlyEvolution;
 import com.kayque.investlab.domain.model.SimulationRequest;
 import com.kayque.investlab.domain.model.SimulationResult;
+import com.kayque.investlab.domain.strategy.InterestRateConversionStrategy;
+import com.kayque.investlab.domain.strategy.InterestRateStrategyResolver;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -24,11 +25,22 @@ public class CompoundInterestSimulationService {
     private static final BigDecimal ONE_HUNDRED =
             new BigDecimal("100");
 
-    private static final BigDecimal TWELVE =
-            new BigDecimal("12");
+    private final InterestRateStrategyResolver rateStrategyResolver;
+
+    public CompoundInterestSimulationService(
+            InterestRateStrategyResolver rateStrategyResolver
+    ) {
+        this.rateStrategyResolver = rateStrategyResolver;
+    }
 
     public SimulationResult simulate(SimulationRequest request) {
-        BigDecimal monthlyRate = calculateMonthlyRate(request);
+        InterestRateConversionStrategy rateStrategy =
+                rateStrategyResolver.resolve(request.ratePeriod());
+
+        BigDecimal monthlyRate =
+                rateStrategy.convertToMonthlyRate(
+                        request.interestRatePercentage()
+                );
 
         BigDecimal balance = money(request.initialInvestment());
         BigDecimal totalInvested = money(request.initialInvestment());
@@ -36,35 +48,50 @@ public class CompoundInterestSimulationService {
 
         List<MonthlyEvolution> evolution = new ArrayList<>();
 
-        for (int month = 1; month <= request.numberOfMonths(); month++) {
+        int numberOfMonths = Math.toIntExact(
+                request.numberOfMonths()
+        );
+
+        for (int month = 1; month <= numberOfMonths; month++) {
             BigDecimal openingBalance = balance;
-            BigDecimal contribution = money(request.monthlyContribution());
+            BigDecimal contribution = money(
+                    request.monthlyContribution()
+            );
 
             if (request.contributionTiming()
                     == ContributionTiming.BEGINNING_OF_PERIOD) {
 
                 balance = money(balance.add(contribution));
-                totalInvested = money(totalInvested.add(contribution));
+                totalInvested = money(
+                        totalInvested.add(contribution)
+                );
             }
 
             BigDecimal interestEarned = money(
-                    balance.multiply(monthlyRate, CALCULATION_CONTEXT)
+                    balance.multiply(
+                            monthlyRate,
+                            CALCULATION_CONTEXT
+                    )
             );
 
             balance = money(balance.add(interestEarned));
-            totalInterest = money(totalInterest.add(interestEarned));
+            totalInterest = money(
+                    totalInterest.add(interestEarned)
+            );
 
             if (request.contributionTiming()
                     == ContributionTiming.END_OF_PERIOD) {
 
                 balance = money(balance.add(contribution));
-                totalInvested = money(totalInvested.add(contribution));
+                totalInvested = money(
+                        totalInvested.add(contribution)
+                );
             }
 
             LocalDate referenceDate =
                     request.startDate().plusMonths(month);
 
-            MonthlyEvolution monthlyEvolution = new MonthlyEvolution(
+            evolution.add(new MonthlyEvolution(
                     month,
                     referenceDate,
                     openingBalance,
@@ -73,40 +100,22 @@ public class CompoundInterestSimulationService {
                     balance,
                     totalInvested,
                     totalInterest
-            );
-
-            evolution.add(monthlyEvolution);
+            ));
         }
 
         BigDecimal profitabilityPercentage =
-                calculateProfitability(totalInterest, totalInvested);
+                calculateProfitability(
+                        totalInterest,
+                        totalInvested
+                );
 
         return new SimulationResult(
                 balance,
                 totalInvested,
                 totalInterest,
                 profitabilityPercentage,
-                Math.toIntExact(request.numberOfMonths()),
+                numberOfMonths,
                 evolution
-        );
-    }
-
-    private BigDecimal calculateMonthlyRate(SimulationRequest request) {
-        BigDecimal decimalRate = request.interestRatePercentage()
-                .divide(
-                        ONE_HUNDRED,
-                        RATE_SCALE,
-                        RoundingMode.HALF_EVEN
-                );
-
-        if (request.ratePeriod() == RatePeriod.MONTHLY) {
-            return decimalRate;
-        }
-
-        return decimalRate.divide(
-                TWELVE,
-                RATE_SCALE,
-                RoundingMode.HALF_EVEN
         );
     }
 
@@ -128,10 +137,16 @@ public class CompoundInterestSimulationService {
                         RoundingMode.HALF_EVEN
                 )
                 .multiply(ONE_HUNDRED)
-                .setScale(MONEY_SCALE, RoundingMode.HALF_EVEN);
+                .setScale(
+                        MONEY_SCALE,
+                        RoundingMode.HALF_EVEN
+                );
     }
 
     private BigDecimal money(BigDecimal value) {
-        return value.setScale(MONEY_SCALE, RoundingMode.HALF_EVEN);
+        return value.setScale(
+                MONEY_SCALE,
+                RoundingMode.HALF_EVEN
+        );
     }
 }
