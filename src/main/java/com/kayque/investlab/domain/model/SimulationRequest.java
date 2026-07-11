@@ -6,6 +6,7 @@ import com.kayque.investlab.domain.exception.InvalidSimulationException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public record SimulationRequest(
@@ -57,5 +58,17 @@ public record SimulationRequest(
                     "End date must be after start date"
             );
         }
+
+        long completeMonths = ChronoUnit.MONTHS.between(startDate, endDate);
+
+        if (!startDate.plusMonths(completeMonths).equals(endDate)) {
+            throw new InvalidSimulationException(
+                    "Simulation period must contain complete months"
+            );
+        }
+    }
+
+    public long numberOfMonths() {
+        return ChronoUnit.MONTHS.between(startDate, endDate);
     }
 }
