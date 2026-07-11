@@ -114,9 +114,13 @@
                             <option
                                     th:each="period : ${ratePeriods}"
                                     th:value="${period}"
-                                    th:text="${period.name() == 'MONTHLY'
-                                        ? 'Mensal'
-                                        : 'Anual'}"
+                                    th:text="${
+                                        period.name() == 'MONTHLY'
+                                            ? 'Mensal'
+                                            : period.name() == 'ANNUAL'
+                                                ? 'Anual nominal'
+                                                : 'Anual efetiva'
+                                    }"
                             ></option>
                         </select>
                     </div>

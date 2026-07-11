@@ -3,7 +3,8 @@ package com.kayque.investlab.domain.enums;
 public enum RatePeriod {
 
     MONTHLY(12),
-    ANNUAL(1);
+    ANNUAL(1),
+    ANNUAL_EFFECTIVE(1);
 
     private final int periodsPerYear;
 

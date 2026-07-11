@@ -1,6 +1,7 @@
 package com.kayque.investlab.config;
 
 import com.kayque.investlab.domain.service.CompoundInterestSimulationService;
+import com.kayque.investlab.domain.strategy.AnnualEffectiveRateConversionStrategy;
 import com.kayque.investlab.domain.strategy.AnnualNominalRateConversionStrategy;
 import com.kayque.investlab.domain.strategy.InterestRateConversionStrategy;
 import com.kayque.investlab.domain.strategy.InterestRateStrategyResolver;
@@ -14,7 +15,8 @@ import java.util.List;
 public class DomainConfiguration {
 
     @Bean
-    public MonthlyRateConversionStrategy monthlyRateConversionStrategy() {
+    public MonthlyRateConversionStrategy
+    monthlyRateConversionStrategy() {
         return new MonthlyRateConversionStrategy();
     }
 
@@ -25,7 +27,14 @@ public class DomainConfiguration {
     }
 
     @Bean
-    public InterestRateStrategyResolver interestRateStrategyResolver(
+    public AnnualEffectiveRateConversionStrategy
+    annualEffectiveRateConversionStrategy() {
+        return new AnnualEffectiveRateConversionStrategy();
+    }
+
+    @Bean
+    public InterestRateStrategyResolver
+    interestRateStrategyResolver(
             List<InterestRateConversionStrategy> strategies
     ) {
         return new InterestRateStrategyResolver(strategies);
