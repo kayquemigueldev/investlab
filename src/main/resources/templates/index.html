@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>InvestLab | Simulador de Investimentos</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <a class="brand" th:href="@{/}">InvestLab</a>
+        <span class="subtitle">Laboratório de investimentos</span>
+    </div>
+</header>
+
+<main class="container main-content">
+    <section class="hero">
+        <span class="eyebrow">Simulação financeira</span>
+        <h1>Planeje hoje o patrimônio que deseja construir.</h1>
+        <p>
+            Simule juros compostos, aportes mensais e acompanhe
+            a evolução do seu investimento.
+        </p>
+    </section>
+
+    <div class="layout">
+        <section class="panel">
+            <div class="panel-heading">
+                <h2>Dados da simulação</h2>
+                <p>Preencha os valores para projetar seu investimento.</p>
+            </div>
+
+            <form
+                    th:action="@{/simulate}"
+                    th:object="${simulationForm}"
+                    method="post"
+            >
+                <div
+                        class="alert"
+                        th:if="${simulationError}"
+                        th:text="${simulationError}"
+                ></div>
+
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="initialInvestment">
+                            Investimento inicial
+                        </label>
+
+                        <input
+                                id="initialInvestment"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                th:field="*{initialInvestment}"
+                        >
+
+                        <span
+                                class="field-error"
+                                th:errors="*{initialInvestment}"
+                        ></span>
+                    </div>
+
+                    <div class="field">
+                        <label for="monthlyContribution">
+                            Aporte mensal
+                        </label>
+
+                        <input
+                                id="monthlyContribution"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                th:field="*{monthlyContribution}"
+                        >
+
+                        <span
+                                class="field-error"
+                                th:errors="*{monthlyContribution}"
+                        ></span>
+                    </div>
+
+                    <div class="field">
+                        <label for="interestRatePercentage">
+                            Taxa de juros (%)
+                        </label>
+
+                        <input
+                                id="interestRatePercentage"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                th:field="*{interestRatePercentage}"
+                        >
+
+                        <span
+                                class="field-error"
+                                th:errors="*{interestRatePercentage}"
+                        ></span>
+                    </div>
+
+                    <div class="field">
+                        <label for="ratePeriod">
+                            Periodicidade da taxa
+                        </label>
+
+                        <select id="ratePeriod" th:field="*{ratePeriod}">
+                            <option
+                                    th:each="period : ${ratePeriods}"
+                                    th:value="${period}"
+                                    th:text="${period.name() == 'MONTHLY'
+                                        ? 'Mensal'
+                                        : 'Anual'}"
+                            ></option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="startDate">Data inicial</label>
+
+                        <input
+                                id="startDate"
+                                type="date"
+                                th:field="*{startDate}"
+                        >
+
+                        <span
+                                class="field-error"
+                                th:errors="*{startDate}"
+                        ></span>
+                    </div>
+
+                    <div class="field">
+                        <label for="endDate">Data final</label>
+
+                        <input
+                                id="endDate"
+                                type="date"
+                                th:field="*{endDate}"
+                        >
+
+                        <span
+                                class="field-error"
+                                th:errors="*{endDate}"
+                        ></span>
+                    </div>
+
+                    <div class="field field-full">
+                        <label for="contributionTiming">
+                            Momento do aporte
+                        </label>
+
+                        <select
+                                id="contributionTiming"
+                                th:field="*{contributionTiming}"
+                        >
+                            <option
+                                    th:each="timing : ${contributionTimings}"
+                                    th:value="${timing}"
+                                    th:text="${timing.name() == 'BEGINNING_OF_PERIOD'
+                                        ? 'Início do mês'
+                                        : 'Final do mês'}"
+                            ></option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="button" type="submit">
+                    Calcular investimento
+                </button>
+            </form>
+        </section>
+
+        <section class="panel result-panel">
+            <div th:if="${result == null}" class="empty-state">
+                <span class="empty-icon">↗</span>
+                <h2>Seu resultado aparecerá aqui</h2>
+                <p>
+                    Preencha os dados ao lado para visualizar sua projeção.
+                </p>
+            </div>
+
+            <div th:if="${result != null}">
+                <div class="panel-heading">
+                    <span class="eyebrow">Resultado projetado</span>
+                    <h2>Resumo da simulação</h2>
+                </div>
+
+                <div class="main-result">
+                    <span>Saldo final</span>
+
+                    <strong
+                            th:text="${#numbers.formatCurrency(result.finalBalance())}"
+                    ></strong>
+                </div>
+
+                <div class="result-grid">
+                    <article class="result-card">
+                        <span>Total investido</span>
+                        <strong
+                                th:text="${#numbers.formatCurrency(result.totalInvested())}"
+                        ></strong>
+                    </article>
+
+                    <article class="result-card">
+                        <span>Rendimentos</span>
+                        <strong
+                                th:text="${#numbers.formatCurrency(result.totalInterest())}"
+                        ></strong>
+                    </article>
+
+                    <article class="result-card">
+                        <span>Rentabilidade</span>
+                        <strong
+                                th:text="${result.profitabilityPercentage() + '%'}"
+                        ></strong>
+                    </article>
+
+                    <article class="result-card">
+                        <span>Período</span>
+                        <strong
+                                th:text="${result.numberOfMonths() + ' meses'}"
+                        ></strong>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+</body>
+</html>
