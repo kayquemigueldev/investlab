@@ -6,6 +6,7 @@ import com.kayque.investlab.domain.model.SimulationRequest;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,25 +14,36 @@ import java.time.LocalDate;
 public class SimulationForm {
 
     @NotNull(message = "Informe o investimento inicial")
-    @DecimalMin(value = "0.00", message = "O investimento não pode ser negativo")
+    @DecimalMin(
+            value = "0.00",
+            message = "O investimento não pode ser negativo"
+    )
     private BigDecimal initialInvestment = new BigDecimal("1000.00");
 
     @NotNull(message = "Informe o aporte mensal")
-    @DecimalMin(value = "0.00", message = "O aporte não pode ser negativo")
+    @DecimalMin(
+            value = "0.00",
+            message = "O aporte não pode ser negativo"
+    )
     private BigDecimal monthlyContribution = new BigDecimal("200.00");
 
     @NotNull(message = "Informe a taxa de juros")
-    @DecimalMin(value = "0.00", message = "A taxa não pode ser negativa")
+    @DecimalMin(
+            value = "0.00",
+            message = "A taxa não pode ser negativa"
+    )
     private BigDecimal interestRatePercentage = new BigDecimal("12.00");
 
     @NotNull(message = "Selecione a periodicidade")
     private RatePeriod ratePeriod = RatePeriod.ANNUAL;
 
     @NotNull(message = "Informe a data inicial")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate startDate = LocalDate.now();
 
     @NotNull(message = "Informe a data final")
     @Future(message = "A data final deve estar no futuro")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate = LocalDate.now().plusYears(1);
 
     @NotNull(message = "Selecione o momento do aporte")
@@ -70,7 +82,9 @@ public class SimulationForm {
         return interestRatePercentage;
     }
 
-    public void setInterestRatePercentage(BigDecimal interestRatePercentage) {
+    public void setInterestRatePercentage(
+            BigDecimal interestRatePercentage
+    ) {
         this.interestRatePercentage = interestRatePercentage;
     }
 
@@ -102,7 +116,9 @@ public class SimulationForm {
         return contributionTiming;
     }
 
-    public void setContributionTiming(ContributionTiming contributionTiming) {
+    public void setContributionTiming(
+            ContributionTiming contributionTiming
+    ) {
         this.contributionTiming = contributionTiming;
     }
 }
