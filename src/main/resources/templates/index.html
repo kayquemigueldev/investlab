@@ -7,6 +7,7 @@
     <title>InvestLab | Simulador de Investimentos</title>
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/evolution-table.css}">
 </head>
 <body>
 
@@ -230,6 +231,13 @@
             </div>
         </section>
     </div>
+
+    <div th:if="${result != null}">
+        <div
+                th:replace="~{fragments/evolution-table :: evolutionTable(${result})}"
+        ></div>
+    </div>
+
 </main>
 
 </body>

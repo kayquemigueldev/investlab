@@ -1,0 +1,140 @@
+.evolution-section {
+    margin-top: 24px;
+    padding: 30px;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background: rgba(16, 28, 25, 0.94);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.24);
+}
+
+.evolution-heading {
+    margin-bottom: 26px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.evolution-heading h2 {
+    margin: 0;
+    font-size: 1.45rem;
+}
+
+.evolution-heading p {
+    margin: 8px 0 0;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.evolution-summary {
+    min-width: 170px;
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-light);
+}
+
+.evolution-summary span {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.evolution-summary strong {
+    color: var(--primary);
+    font-size: 1.05rem;
+}
+
+.table-container {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+}
+
+.evolution-table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+.evolution-table th,
+.evolution-table td {
+    padding: 16px 18px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+}
+
+.evolution-table th:first-child,
+.evolution-table td:first-child,
+.evolution-table th:nth-child(2),
+.evolution-table td:nth-child(2) {
+    text-align: left;
+}
+
+.evolution-table th {
+    color: var(--muted);
+    background: rgba(23, 38, 34, 0.9);
+    font-size: 0.75rem;
+    font-weight: 750;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.evolution-table td {
+    color: #dce9e4;
+    font-size: 0.88rem;
+}
+
+.evolution-table tbody tr {
+    transition: background-color 150ms ease;
+}
+
+.evolution-table tbody tr:hover {
+    background: rgba(69, 230, 168, 0.045);
+}
+
+.evolution-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.month-number {
+    width: 30px;
+    height: 30px;
+    display: inline-grid;
+    place-items: center;
+    color: var(--primary);
+    border: 1px solid rgba(69, 230, 168, 0.22);
+    border-radius: 9px;
+    background: rgba(69, 230, 168, 0.07);
+    font-weight: 800;
+}
+
+.positive-value {
+    color: var(--primary) !important;
+}
+
+.closing-balance {
+    color: var(--text) !important;
+    font-weight: 750;
+}
+
+@media (max-width: 700px) {
+    .evolution-section {
+        padding: 20px;
+    }
+
+    .evolution-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .evolution-summary {
+        width: 100%;
+    }
+
+    .evolution-table th,
+    .evolution-table td {
+        padding: 14px;
+    }
+}

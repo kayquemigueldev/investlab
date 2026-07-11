@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<section
+        th:fragment="evolutionTable(result)"
+        class="evolution-section"
+>
+    <div class="evolution-heading">
+        <div>
+            <span class="eyebrow">Evolução patrimonial</span>
+            <h2>Detalhamento mês a mês</h2>
+            <p>
+                Acompanhe os aportes, rendimentos e o crescimento
+                acumulado do patrimônio.
+            </p>
+        </div>
+
+        <div class="evolution-summary">
+            <span>Período calculado</span>
+            <strong th:text="|${result.numberOfMonths()} meses|"></strong>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="evolution-table">
+            <thead>
+            <tr>
+                <th>Mês</th>
+                <th>Data</th>
+                <th>Saldo inicial</th>
+                <th>Aporte</th>
+                <th>Juros</th>
+                <th>Saldo final</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="month : ${result.monthlyEvolution()}">
+                <td>
+                    <span
+                            class="month-number"
+                            th:text="${month.monthNumber()}"
+                    ></span>
+                </td>
+
+                <td
+                        th:text="${#temporals.format(
+                            month.referenceDate(),
+                            'dd/MM/yyyy'
+                        )}"
+                ></td>
+
+                <td
+                        th:text="${#numbers.formatCurrency(
+                            month.openingBalance()
+                        )}"
+                ></td>
+
+                <td
+                        th:text="${#numbers.formatCurrency(
+                            month.contribution()
+                        )}"
+                ></td>
+
+                <td class="positive-value"
+                    th:text="${#numbers.formatCurrency(
+                        month.interestEarned()
+                    )}"
+                ></td>
+
+                <td class="closing-balance"
+                    th:text="${#numbers.formatCurrency(
+                        month.closingBalance()
+                    )}"
+                ></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+</html>
