@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/evolution-table.css}">
+    <link rel="stylesheet" th:href="@{/css/investment-chart.css}">
 </head>
 <body>
 
@@ -234,11 +235,17 @@
 
     <div th:if="${result != null}">
         <div
+                th:replace="~{fragments/investment-chart :: investmentChart(${result})}"
+        ></div>
+
+        <div
                 th:replace="~{fragments/evolution-table :: evolutionTable(${result})}"
         ></div>
     </div>
 
+
 </main>
 
+<script th:src="@{/js/investment-chart.js}"></script>
 </body>
 </html>

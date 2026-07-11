@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<section
+        th:fragment="investmentChart(result)"
+        class="chart-section"
+>
+    <div class="chart-heading">
+        <div>
+            <span class="eyebrow">Visualização financeira</span>
+            <h2>Crescimento do patrimônio</h2>
+            <p>
+                Compare o valor investido com o patrimônio acumulado
+                ao longo do período.
+            </p>
+        </div>
+
+        <div class="chart-legend">
+            <span class="legend-item">
+                <span class="legend-dot invested-dot"></span>
+                Total investido
+            </span>
+
+            <span class="legend-item">
+                <span class="legend-dot balance-dot"></span>
+                Patrimônio
+            </span>
+        </div>
+    </div>
+
+    <div class="chart-wrapper">
+        <canvas
+                id="investmentChart"
+                aria-label="Gráfico da evolução do investimento"
+                role="img"
+        ></canvas>
+
+        <div id="chartTooltip" class="chart-tooltip" hidden>
+            <strong id="tooltipDate"></strong>
+
+            <span>
+                Investido:
+                <b id="tooltipInvested"></b>
+            </span>
+
+            <span>
+                Patrimônio:
+                <b id="tooltipBalance"></b>
+            </span>
+        </div>
+    </div>
+
+    <div id="investmentChartData" hidden>
+        <span
+                th:each="month : ${result.monthlyEvolution()}"
+                th:data-date="${#temporals.format(
+                    month.referenceDate(),
+                    'MM/yyyy'
+                )}"
+                th:data-invested="${month.totalInvested()}"
+                th:data-balance="${month.closingBalance()}"
+        ></span>
+    </div>
+</section>
+
+</html>

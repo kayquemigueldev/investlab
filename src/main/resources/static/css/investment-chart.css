@@ -1,0 +1,120 @@
+.chart-section {
+    margin-top: 24px;
+    padding: 30px;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background: rgba(16, 28, 25, 0.94);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.24);
+}
+
+.chart-heading {
+    margin-bottom: 26px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.chart-heading h2 {
+    margin: 0;
+    font-size: 1.45rem;
+}
+
+.chart-heading p {
+    margin: 8px 0 0;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.chart-legend {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.invested-dot {
+    background: #6f8f86;
+}
+
+.balance-dot {
+    background: var(--primary);
+}
+
+.chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 390px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: rgba(8, 17, 15, 0.55);
+}
+
+#investmentChart {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.chart-tooltip {
+    position: absolute;
+    z-index: 5;
+    min-width: 180px;
+    padding: 12px 14px;
+    pointer-events: none;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #172622;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    transform: translate(-50%, calc(-100% - 14px));
+}
+
+.chart-tooltip strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text);
+    font-size: 0.86rem;
+}
+
+.chart-tooltip span {
+    display: block;
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.chart-tooltip b {
+    color: var(--text);
+}
+
+@media (max-width: 700px) {
+    .chart-section {
+        padding: 20px;
+    }
+
+    .chart-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .chart-wrapper {
+        height: 310px;
+        padding: 10px;
+    }
+}
