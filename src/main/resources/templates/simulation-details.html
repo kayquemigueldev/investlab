@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title
+            th:text="|Simulação #${details.history().id()} - InvestLab|"
+    ></title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link
+            rel="stylesheet"
+            th:href="@{/css/investment-chart.css}"
+    >
+    <link
+            rel="stylesheet"
+            th:href="@{/css/evolution-table.css}"
+    >
+    <link
+            rel="stylesheet"
+            th:href="@{/css/simulation-details.css}"
+    >
+</head>
+<body>
+
+<header class="header">
+    <div class="container details-navigation">
+        <a class="brand" th:href="@{/}">InvestLab</a>
+
+        <nav class="details-links">
+            <a th:href="@{/}">Simulador</a>
+            <a th:href="@{/history}">Histórico</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container details-content">
+    <section class="details-hero">
+        <div>
+            <a class="back-link" th:href="@{/history}">
+                ← Voltar ao histórico
+            </a>
+
+            <span class="eyebrow">Detalhes da projeção</span>
+
+            <h1 th:text="|Simulação #${details.history().id()}|"></h1>
+
+            <p
+                    th:text="|Realizada em ${#temporals.format(
+                        details.history().createdAt(),
+                        'dd/MM/yyyy HH:mm'
+                    )}|"
+            ></p>
+        </div>
+
+        <div class="saved-badge">Simulação salva</div>
+    </section>
+
+    <section class="details-grid">
+        <article class="details-panel">
+            <span class="eyebrow">Parâmetros</span>
+            <h2>Dados informados</h2>
+
+            <div class="parameter-grid">
+                <div>
+                    <span>Investimento inicial</span>
+                    <strong
+                            th:text="${#numbers.formatCurrency(
+                                details.history().initialInvestment()
+                            )}"
+                    ></strong>
+                </div>
+
+                <div>
+                    <span>Aporte mensal</span>
+                    <strong
+                            th:text="${#numbers.formatCurrency(
+                                details.history().monthlyContribution()
+                            )}"
+                    ></strong>
+                </div>
+
+                <div>
+                    <span>Taxa utilizada</span>
+                    <strong
+                            th:text="|${#numbers.formatDecimal(
+                                details.history()
+                                    .interestRatePercentage(),
+                                1,
+                                2
+                            )}%|"
+                    ></strong>
+                </div>
+
+                <div>
+                    <span>Período</span>
+                    <strong
+                            th:text="|${details.history().numberOfMonths()}
+                                ${details.history().numberOfMonths() == 1
+                                    ? 'mês'
+                                    : 'meses'}|"
+                    ></strong>
+                </div>
+
+                <div>
+                    <span>Data inicial</span>
+                    <strong
+                            th:text="${#temporals.format(
+                                details.history().startDate(),
+                                'dd/MM/yyyy'
+                            )}"
+                    ></strong>
+                </div>
+
+                <div>
+                    <span>Data final</span>
+                    <strong
+                            th:text="${#temporals.format(
+                                details.history().endDate(),
+                                'dd/MM/yyyy'
+                            )}"
+                    ></strong>
+                </div>
+            </div>
+        </article>
+
+        <article class="details-panel result-details">
+            <span class="eyebrow">Resultado salvo</span>
+            <h2>Resumo financeiro</h2>
+
+            <div class="details-main-result">
+                <span>Saldo final</span>
+
+                <strong
+                        th:text="${#numbers.formatCurrency(
+                            details.history().finalBalance()
+                        )}"
+                ></strong>
+            </div>
+
+            <div class="details-result-grid">
+                <div>
+                    <span>Total investido</span>
+                    <strong
+                            th:text="${#numbers.formatCurrency(
+                                details.history().totalInvested()
+                            )}"
+                    ></strong>
+                </div>
+
+                <div>
+                    <span>Rendimentos</span>
+                    <strong
+                            th:text="${#numbers.formatCurrency(
+                                details.history().totalInterest()
+                            )}"
+                    ></strong>
+                </div>
+
+                <div>
+                    <span>Rentabilidade</span>
+                    <strong
+                            th:text="|${details.history()
+                                .profitabilityPercentage()}%|"
+                    ></strong>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <div
+            th:replace="~{fragments/investment-chart
+                :: investmentChart(${result})}"
+    ></div>
+
+    <div
+            th:replace="~{fragments/evolution-table
+                :: evolutionTable(${result})}"
+    ></div>
+</main>
+
+<script th:src="@{/js/investment-chart.js}"></script>
+</body>
+</html>

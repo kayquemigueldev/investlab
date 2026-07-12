@@ -87,10 +87,11 @@
                 <tbody>
                 <tr th:each="simulation : ${simulations}">
                     <td>
-                        <span
+                        <a
                                 class="history-id"
+                                th:href="@{/history/{id}(id=${simulation.id()})}"
                                 th:text="|#${simulation.id()}|"
-                        ></span>
+                        ></a>
                     </td>
 
                     <td

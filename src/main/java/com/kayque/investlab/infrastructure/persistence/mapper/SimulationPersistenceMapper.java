@@ -52,4 +52,18 @@ public class SimulationPersistenceMapper {
                 entity.getCreatedAt()
         );
     }
+
+    public SimulationRequest toDomainRequest(
+            SimulationEntity entity
+    ) {
+        return new SimulationRequest(
+                entity.getInitialInvestment(),
+                entity.getMonthlyContribution(),
+                entity.getInterestRatePercentage(),
+                entity.getRatePeriod(),
+                entity.getStartDate(),
+                entity.getEndDate(),
+                entity.getContributionTiming()
+        );
+    }
 }

@@ -188,3 +188,11 @@
         flex-direction: column;
     }
 }
+
+a.history-id {
+    text-decoration: none;
+}
+
+a.history-id:hover {
+    text-decoration: underline;
+}
