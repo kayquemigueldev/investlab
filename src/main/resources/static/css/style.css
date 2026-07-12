@@ -296,3 +296,17 @@ select:focus {
         display: none;
     }
 }
+
+.success-alert {
+    margin-bottom: 20px;
+    padding: 13px 15px;
+    color: var(--primary);
+    border: 1px solid rgba(69, 230, 168, 0.3);
+    border-radius: 12px;
+    background: rgba(69, 230, 168, 0.08);
+    font-size: 0.86rem;
+}
+
+.success-alert strong {
+    color: var(--text);
+}

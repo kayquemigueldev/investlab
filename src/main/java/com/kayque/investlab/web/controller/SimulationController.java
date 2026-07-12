@@ -1,5 +1,6 @@
 package com.kayque.investlab.web.controller;
 
+import com.kayque.investlab.application.service.SimulationHistoryService;
 import com.kayque.investlab.domain.enums.ContributionTiming;
 import com.kayque.investlab.domain.enums.RatePeriod;
 import com.kayque.investlab.domain.exception.InvalidSimulationException;
@@ -21,13 +22,16 @@ public class SimulationController {
 
     private final CompoundInterestSimulationService simulationService;
     private final ScenarioComparisonService comparisonService;
+    private final SimulationHistoryService historyService;
 
     public SimulationController(
             CompoundInterestSimulationService simulationService,
-            ScenarioComparisonService comparisonService
+            ScenarioComparisonService comparisonService,
+            SimulationHistoryService historyService
     ) {
         this.simulationService = simulationService;
         this.comparisonService = comparisonService;
+        this.historyService = historyService;
     }
 
     @GetMapping("/")
@@ -64,8 +68,15 @@ public class SimulationController {
             ScenarioComparisonResult comparison =
                     comparisonService.compare(request);
 
+            Long savedSimulationId =
+                    historyService.save(request, result);
+
             model.addAttribute("result", result);
             model.addAttribute("comparison", comparison);
+            model.addAttribute(
+                    "savedSimulationId",
+                    savedSimulationId
+            );
         } catch (InvalidSimulationException exception) {
             model.addAttribute(
                     "simulationError",
