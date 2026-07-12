@@ -1,6 +1,7 @@
 package com.kayque.investlab.config;
 
 import com.kayque.investlab.domain.service.CompoundInterestSimulationService;
+import com.kayque.investlab.domain.service.FinancialGoalSimulationService;
 import com.kayque.investlab.domain.service.ScenarioComparisonService;
 import com.kayque.investlab.domain.strategy.AnnualEffectiveRateConversionStrategy;
 import com.kayque.investlab.domain.strategy.AnnualNominalRateConversionStrategy;
@@ -52,7 +53,18 @@ public class DomainConfiguration {
     }
 
     @Bean
-    public ScenarioComparisonService scenarioComparisonService(
+    public FinancialGoalSimulationService
+    financialGoalSimulationService(
+            InterestRateStrategyResolver rateStrategyResolver
+    ) {
+        return new FinancialGoalSimulationService(
+                rateStrategyResolver
+        );
+    }
+
+    @Bean
+    public ScenarioComparisonService
+    scenarioComparisonService(
             CompoundInterestSimulationService simulationService
     ) {
         return new ScenarioComparisonService(

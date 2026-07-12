@@ -1,0 +1,129 @@
+.goal-navigation {
+    justify-content: space-between;
+}
+
+.goal-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.goal-links a {
+    padding: 9px 13px;
+    color: var(--muted);
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 0.86rem;
+}
+
+.goal-links a:hover,
+.goal-links a.active {
+    color: var(--text);
+    background: var(--surface-light);
+}
+
+.goal-content {
+    padding: 58px 0;
+}
+
+.goal-hero {
+    max-width: 760px;
+    margin-bottom: 36px;
+}
+
+.goal-hero h1 {
+    margin: 0;
+    font-size: clamp(2.3rem, 5vw, 4.2rem);
+    letter-spacing: -0.05em;
+}
+
+.goal-hero p {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.goal-layout {
+    display: grid;
+    grid-template-columns:
+            minmax(0, 1.08fr)
+            minmax(340px, 0.92fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.goal-result-panel {
+    position: sticky;
+    top: 24px;
+}
+
+.goal-result-panel h2 {
+    margin-top: 0;
+}
+
+.goal-main-result {
+    margin: 24px 0 14px;
+    padding: 22px;
+    border: 1px solid rgba(69, 230, 168, 0.3);
+    border-radius: 15px;
+    background: rgba(69, 230, 168, 0.07);
+}
+
+.goal-main-result span,
+.goal-result-grid span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--muted);
+    font-size: 0.76rem;
+}
+
+.goal-main-result strong {
+    color: var(--primary);
+    font-size: 1.8rem;
+    text-transform: capitalize;
+}
+
+.goal-result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.goal-result-grid div {
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: var(--surface-light);
+}
+
+.goal-result-grid strong {
+    color: var(--text);
+}
+
+@media (max-width: 880px) {
+    .goal-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .goal-result-panel {
+        position: static;
+    }
+}
+
+@media (max-width: 650px) {
+    .goal-content {
+        padding: 38px 0;
+    }
+
+    .goal-links {
+        gap: 2px;
+    }
+
+    .goal-links a {
+        padding: 8px;
+        font-size: 0.76rem;
+    }
+
+    .goal-result-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Meta financeira | InvestLab</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/goal.css}">
+    <link
+            rel="stylesheet"
+            th:href="@{/css/investment-chart.css}"
+    >
+    <link
+            rel="stylesheet"
+            th:href="@{/css/evolution-table.css}"
+    >
+</head>
+<body>
+
+<header class="header">
+    <div class="container goal-navigation">
+        <a class="brand" th:href="@{/}">InvestLab</a>
+
+        <nav class="goal-links">
+            <a th:href="@{/}">Simulador</a>
+            <a class="active" th:href="@{/goal}">
+                Meta financeira
+            </a>
+            <a th:href="@{/history}">Histórico</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container goal-content">
+    <section class="goal-hero">
+        <span class="eyebrow">Planejamento por objetivo</span>
+
+        <h1>Quando você alcançará sua meta?</h1>
+
+        <p>
+            Informe seu objetivo financeiro e descubra quanto
+            tempo será necessário para atingi-lo.
+        </p>
+    </section>
+
+    <div class="goal-layout">
+        <section class="panel">
+            <div class="panel-heading">
+                <h2>Dados da meta</h2>
+                <p>
+                    Configure seus recursos e expectativa de retorno.
+                </p>
+            </div>
+
+            <form
+                    th:action="@{/goal/calculate}"
+                    th:object="${goalSimulationForm}"
+                    method="post"
+            >
+                <div
+                        class="alert"
+                        th:if="${goalError}"
+                        th:text="${goalError}"
+                ></div>
+
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="initialInvestment">
+                            Investimento inicial
+                        </label>
+
+                        <input
+                                id="initialInvestment"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                th:field="*{initialInvestment}"
+                        >
+
+                        <span
+                                class="field-error"
+                                th:errors="*{initialInvestment}"
+                        ></span>
+                    </div>
+
+                    <div class="field">
+                        <label for="monthlyContribution">
+                            Aporte mensal
+                        </label>
+
+                        <input
+                                id="monthlyContribution"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                th:field="*{monthlyContribution}"
+                        >
+
+                        <span
+                                class="field-error"
+                                th:errors="*{monthlyContribution}"
+                        ></span>
+                    </div>
+
+                    <div class="field field-full">
+                        <label for="targetAmount">
+                            Meta financeira
+                        </label>
+
+                        <input
+                                id="targetAmount"
+                                type="number"
+                                min="0.01"
+                                step="0.01"
+                                th:field="*{targetAmount}"
+                        >
+
+                        <span
+                                class="field-error"
+                                th:errors="*{targetAmount}"
+                        ></span>
+                    </div>
+
+                    <div class="field">
+                        <label for="interestRatePercentage">
+                            Taxa de juros (%)
+                        </label>
+
+                        <input
+                                id="interestRatePercentage"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                th:field="*{interestRatePercentage}"
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label for="ratePeriod">
+                            Periodicidade
+                        </label>
+
+                        <select
+                                id="ratePeriod"
+                                th:field="*{ratePeriod}"
+                        >
+                            <option
+                                    th:each="period : ${ratePeriods}"
+                                    th:value="${period}"
+                                    th:text="${
+                                        period.name() == 'MONTHLY'
+                                            ? 'Mensal'
+                                            : period.name() == 'ANNUAL'
+                                                ? 'Anual nominal'
+                                                : 'Anual efetiva'
+                                    }"
+                            ></option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="startDate">
+                            Data inicial
+                        </label>
+
+                        <input
+                                id="startDate"
+                                type="date"
+                                th:field="*{startDate}"
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label for="contributionTiming">
+                            Momento do aporte
+                        </label>
+
+                        <select
+                                id="contributionTiming"
+                                th:field="*{contributionTiming}"
+                        >
+                            <option
+                                    th:each="timing : ${contributionTimings}"
+                                    th:value="${timing}"
+                                    th:text="${timing.name()
+                                        == 'BEGINNING_OF_PERIOD'
+                                            ? 'Início do mês'
+                                            : 'Final do mês'}"
+                            ></option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="button" type="submit">
+                    Calcular minha meta
+                </button>
+            </form>
+        </section>
+
+        <section class="panel goal-result-panel">
+            <div
+                    class="empty-state"
+                    th:if="${goalResult == null}"
+            >
+                <span class="empty-icon">◎</span>
+                <h2>Sua meta aparecerá aqui</h2>
+                <p>
+                    Preencha os dados para estimar o prazo.
+                </p>
+            </div>
+
+            <div th:if="${goalResult != null}">
+                <span class="eyebrow">Meta alcançada</span>
+                <h2>Projeção do objetivo</h2>
+
+                <div class="goal-main-result">
+                    <span>Previsão para alcançar a meta</span>
+
+                    <strong
+                            th:text="${#temporals.format(
+                                goalResult.targetDate(),
+                                'MMMM/yyyy'
+                            )}"
+                    ></strong>
+                </div>
+
+                <div class="goal-result-grid">
+                    <div>
+                        <span>Meta desejada</span>
+                        <strong
+                                th:text="${#numbers.formatCurrency(
+                                    goalResult.targetAmount()
+                                )}"
+                        ></strong>
+                    </div>
+
+                    <div>
+                        <span>Saldo projetado</span>
+                        <strong
+                                th:text="${#numbers.formatCurrency(
+                                    goalResult.finalBalance()
+                                )}"
+                        ></strong>
+                    </div>
+
+                    <div>
+                        <span>Tempo necessário</span>
+                        <strong
+                                th:text="|${goalResult.numberOfMonths()}
+                                    ${goalResult.numberOfMonths() == 1
+                                        ? 'mês'
+                                        : 'meses'}|"
+                        ></strong>
+                    </div>
+
+                    <div>
+                        <span>Total investido</span>
+                        <strong
+                                th:text="${#numbers.formatCurrency(
+                                    goalResult.totalInvested()
+                                )}"
+                        ></strong>
+                    </div>
+
+                    <div>
+                        <span>Rendimentos</span>
+                        <strong
+                                th:text="${#numbers.formatCurrency(
+                                    goalResult.totalInterest()
+                                )}"
+                        ></strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div th:if="${goalResult != null}">
+        <div
+                th:replace="~{fragments/investment-chart
+                    :: investmentChart(${result})}"
+        ></div>
+
+        <div
+                th:replace="~{fragments/evolution-table
+                    :: evolutionTable(${result})}"
+        ></div>
+    </div>
+</main>
+
+<script th:src="@{/js/investment-chart.js}"></script>
+</body>
+</html>
