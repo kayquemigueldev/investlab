@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -36,6 +37,9 @@ public class SimulationHistoryController {
     @GetMapping("/history/{id}")
     public String showDetails(
             @PathVariable Long id,
+            @RequestParam(
+                    defaultValue = "false"
+            ) boolean created,
             Model model
     ) {
         SimulationDetails details =
@@ -48,10 +52,18 @@ public class SimulationHistoryController {
                         );
 
         model.addAttribute("details", details);
+
         model.addAttribute(
                 "result",
                 details.recalculatedResult()
         );
+
+        model.addAttribute(
+                "comparison",
+                details.scenarioComparison()
+        );
+
+        model.addAttribute("created", created);
 
         return "simulation-details";
     }

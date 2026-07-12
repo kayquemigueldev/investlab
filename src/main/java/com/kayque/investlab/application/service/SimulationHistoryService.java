@@ -2,9 +2,11 @@ package com.kayque.investlab.application.service;
 
 import com.kayque.investlab.application.dto.SimulationDetails;
 import com.kayque.investlab.application.dto.SimulationHistoryItem;
+import com.kayque.investlab.domain.model.ScenarioComparisonResult;
 import com.kayque.investlab.domain.model.SimulationRequest;
 import com.kayque.investlab.domain.model.SimulationResult;
 import com.kayque.investlab.domain.service.CompoundInterestSimulationService;
+import com.kayque.investlab.domain.service.ScenarioComparisonService;
 import com.kayque.investlab.infrastructure.persistence.entity.SimulationEntity;
 import com.kayque.investlab.infrastructure.persistence.mapper.SimulationPersistenceMapper;
 import com.kayque.investlab.infrastructure.persistence.repository.SimulationRepository;
@@ -20,15 +22,18 @@ public class SimulationHistoryService {
     private final SimulationRepository repository;
     private final SimulationPersistenceMapper mapper;
     private final CompoundInterestSimulationService simulationService;
+    private final ScenarioComparisonService comparisonService;
 
     public SimulationHistoryService(
             SimulationRepository repository,
             SimulationPersistenceMapper mapper,
-            CompoundInterestSimulationService simulationService
+            CompoundInterestSimulationService simulationService,
+            ScenarioComparisonService comparisonService
     ) {
         this.repository = repository;
         this.mapper = mapper;
         this.simulationService = simulationService;
+        this.comparisonService = comparisonService;
     }
 
     @Transactional
@@ -69,12 +74,16 @@ public class SimulationHistoryService {
         SimulationResult recalculatedResult =
                 simulationService.simulate(request);
 
+        ScenarioComparisonResult scenarioComparison =
+                comparisonService.compare(request);
+
         SimulationHistoryItem historyItem =
                 mapper.toHistoryItem(entity);
 
         return new SimulationDetails(
                 historyItem,
-                recalculatedResult
+                recalculatedResult,
+                scenarioComparison
         );
     }
 }

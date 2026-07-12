@@ -24,6 +24,11 @@
             rel="stylesheet"
             th:href="@{/css/simulation-details.css}"
     >
+    <link
+            rel="stylesheet"
+            th:href="@{/css/scenario-comparison.css}"
+    >
+
 </head>
 <body>
 
@@ -39,6 +44,14 @@
 </header>
 
 <main class="container details-content">
+
+    <div
+            class="details-success"
+            th:if="${created}"
+    >
+        Simulação calculada e salva com sucesso.
+    </div>
+
     <section class="details-hero">
         <div>
             <a class="back-link" th:href="@{/history}">
@@ -171,6 +184,13 @@
             </div>
         </article>
     </section>
+
+    <div th:if="${comparison != null}">
+        <div
+                th:replace="~{fragments/scenario-comparison
+                :: scenarioComparison(${comparison})}"
+        ></div>
+    </div>
 
     <div
             th:replace="~{fragments/investment-chart

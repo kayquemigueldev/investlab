@@ -4,11 +4,9 @@ import com.kayque.investlab.application.service.SimulationHistoryService;
 import com.kayque.investlab.domain.enums.ContributionTiming;
 import com.kayque.investlab.domain.enums.RatePeriod;
 import com.kayque.investlab.domain.exception.InvalidSimulationException;
-import com.kayque.investlab.domain.model.ScenarioComparisonResult;
 import com.kayque.investlab.domain.model.SimulationRequest;
 import com.kayque.investlab.domain.model.SimulationResult;
 import com.kayque.investlab.domain.service.CompoundInterestSimulationService;
-import com.kayque.investlab.domain.service.ScenarioComparisonService;
 import com.kayque.investlab.web.form.SimulationForm;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -21,16 +19,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class SimulationController {
 
     private final CompoundInterestSimulationService simulationService;
-    private final ScenarioComparisonService comparisonService;
     private final SimulationHistoryService historyService;
 
     public SimulationController(
             CompoundInterestSimulationService simulationService,
-            ScenarioComparisonService comparisonService,
             SimulationHistoryService historyService
     ) {
         this.simulationService = simulationService;
-        this.comparisonService = comparisonService;
         this.historyService = historyService;
     }
 
@@ -65,26 +60,20 @@ public class SimulationController {
             SimulationResult result =
                     simulationService.simulate(request);
 
-            ScenarioComparisonResult comparison =
-                    comparisonService.compare(request);
-
             Long savedSimulationId =
                     historyService.save(request, result);
 
-            model.addAttribute("result", result);
-            model.addAttribute("comparison", comparison);
-            model.addAttribute(
-                    "savedSimulationId",
-                    savedSimulationId
-            );
+            return "redirect:/history/"
+                    + savedSimulationId
+                    + "?created=true";
         } catch (InvalidSimulationException exception) {
             model.addAttribute(
                     "simulationError",
                     exception.getMessage()
             );
-        }
 
-        return "index";
+            return "index";
+        }
     }
 
     private void addOptions(Model model) {
