@@ -3,6 +3,7 @@ package com.kayque.investlab.domain.model;
 import com.kayque.investlab.domain.enums.ContributionTiming;
 import com.kayque.investlab.domain.enums.RatePeriod;
 import com.kayque.investlab.domain.exception.InvalidSimulationException;
+import com.kayque.investlab.domain.validation.SimulationLimits;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -54,19 +55,22 @@ public record GoalSimulationRequest(
                 "Contribution timing is required"
         );
 
-        if (initialInvestment.signum() < 0) {
-            throw new InvalidSimulationException(
-                    "Initial investment cannot be negative"
-            );
-        }
+        validateMonetaryValue(
+                initialInvestment,
+                "Initial investment"
+        );
 
-        if (monthlyContribution.signum() < 0) {
-            throw new InvalidSimulationException(
-                    "Monthly contribution cannot be negative"
-            );
-        }
+        validateMonetaryValue(
+                monthlyContribution,
+                "Monthly contribution"
+        );
 
-        if (targetAmount.signum() <= 0) {
+        validateMonetaryValue(
+                targetAmount,
+                "Target amount"
+        );
+
+        if (targetAmount.signum() == 0) {
             throw new InvalidSimulationException(
                     "Target amount must be greater than zero"
             );
@@ -75,6 +79,14 @@ public record GoalSimulationRequest(
         if (interestRatePercentage.signum() < 0) {
             throw new InvalidSimulationException(
                     "Interest rate cannot be negative"
+            );
+        }
+
+        if (interestRatePercentage.compareTo(
+                SimulationLimits.MAXIMUM_RATE_PERCENTAGE
+        ) > 0) {
+            throw new InvalidSimulationException(
+                    "Interest rate cannot exceed 1000%"
             );
         }
 
@@ -90,9 +102,28 @@ public record GoalSimulationRequest(
         if (targetNotReached
                 && noContribution
                 && noProfitability) {
-
             throw new InvalidSimulationException(
                     "The goal cannot be reached without contributions or profitability"
+            );
+        }
+    }
+
+    private static void validateMonetaryValue(
+            BigDecimal value,
+            String fieldName
+    ) {
+        if (value.signum() < 0) {
+            throw new InvalidSimulationException(
+                    fieldName + " cannot be negative"
+            );
+        }
+
+        if (value.compareTo(
+                SimulationLimits.MAXIMUM_MONETARY_AMOUNT
+        ) > 0) {
+            throw new InvalidSimulationException(
+                    fieldName
+                            + " exceeds the supported maximum"
             );
         }
     }

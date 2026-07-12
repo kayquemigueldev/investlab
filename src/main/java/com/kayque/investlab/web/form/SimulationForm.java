@@ -7,6 +7,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.validation.constraints.DecimalMax;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,6 +19,12 @@ public class SimulationForm {
             value = "0.00",
             message = "O investimento não pode ser negativo"
     )
+
+    @DecimalMax(
+            value = "99999999999999999.99",
+            message = "O investimento excede o limite suportado"
+    )
+
     private BigDecimal initialInvestment = new BigDecimal("1000.00");
 
     @NotNull(message = "Informe o aporte mensal")
@@ -25,6 +32,12 @@ public class SimulationForm {
             value = "0.00",
             message = "O aporte não pode ser negativo"
     )
+
+    @DecimalMax(
+            value = "99999999999999999.99",
+            message = "O aporte excede o limite suportado"
+    )
+
     private BigDecimal monthlyContribution = new BigDecimal("200.00");
 
     @NotNull(message = "Informe a taxa de juros")
@@ -32,6 +45,12 @@ public class SimulationForm {
             value = "0.00",
             message = "A taxa não pode ser negativa"
     )
+
+    @DecimalMax(
+            value = "1000.00",
+            message = "A taxa não pode ultrapassar 1000%"
+    )
+
     private BigDecimal interestRatePercentage = new BigDecimal("12.00");
 
     @NotNull(message = "Selecione a periodicidade")

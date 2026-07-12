@@ -6,6 +6,7 @@ import com.kayque.investlab.domain.model.GoalSimulationRequest;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.validation.constraints.DecimalMax;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,6 +18,12 @@ public class GoalSimulationForm {
             value = "0.00",
             message = "O investimento não pode ser negativo"
     )
+
+    @DecimalMax(
+            value = "99999999999999999.99",
+            message = "O investimento excede o limite suportado"
+    )
+
     private BigDecimal initialInvestment =
             new BigDecimal("5000.00");
 
@@ -25,6 +32,12 @@ public class GoalSimulationForm {
             value = "0.00",
             message = "O aporte não pode ser negativo"
     )
+
+    @DecimalMax(
+            value = "99999999999999999.99",
+            message = "O aporte excede o limite suportado"
+    )
+
     private BigDecimal monthlyContribution =
             new BigDecimal("500.00");
 
@@ -33,6 +46,12 @@ public class GoalSimulationForm {
             value = "0.01",
             message = "A meta deve ser maior que zero"
     )
+
+    @DecimalMax(
+            value = "99999999999999999.99",
+            message = "A meta excede o limite suportado"
+    )
+
     private BigDecimal targetAmount =
             new BigDecimal("100000.00");
 
@@ -41,6 +60,12 @@ public class GoalSimulationForm {
             value = "0.00",
             message = "A taxa não pode ser negativa"
     )
+
+    @DecimalMax(
+            value = "1000.00",
+            message = "A taxa não pode ultrapassar 1000%"
+    )
+
     private BigDecimal interestRatePercentage =
             new BigDecimal("10.00");
 
