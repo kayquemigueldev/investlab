@@ -321,7 +321,13 @@ select:focus {
     gap: 18px;
 }
 
-.history-link {
+.main-navigation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.main-navigation a {
     padding: 9px 13px;
     color: var(--muted);
     border-radius: 9px;
@@ -332,7 +338,18 @@ select:focus {
             background-color 150ms ease;
 }
 
-.history-link:hover {
+.main-navigation a:hover {
     color: var(--text);
     background: var(--surface-light);
+}
+
+@media (max-width: 600px) {
+    .main-navigation {
+        gap: 2px;
+    }
+
+    .main-navigation a {
+        padding: 8px;
+        font-size: 0.76rem;
+    }
 }

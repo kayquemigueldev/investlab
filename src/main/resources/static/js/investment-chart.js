@@ -51,24 +51,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
         context.clearRect(0, 0, width, height);
 
-        const padding = {
-            top: 28,
-            right: 28,
-            bottom: 48,
-            left: 74
-        };
-
-        const chartWidth = width - padding.left - padding.right;
-        const chartHeight = height - padding.top - padding.bottom;
-
         const maximumValue = Math.max(
             ...points.map(point =>
                 Math.max(point.invested, point.balance)
             )
         );
 
-        const roundedMaximum = Math.ceil(maximumValue / 1000) * 1000
+        const roundedMaximum =
+            Math.ceil(maximumValue / 1000) * 1000
             || 1000;
+
+        const gridLines = 4;
+
+        context.font =
+            "12px -apple-system, BlinkMacSystemFont, sans-serif";
+
+        const gridLabels = Array.from(
+            {length: gridLines + 1},
+            (_, index) => {
+                const percentage = index / gridLines;
+                const value = roundedMaximum * percentage;
+
+                return compactCurrency(value);
+            }
+        );
+
+        const maximumLabelWidth = Math.max(
+            ...gridLabels.map(label =>
+                context.measureText(label).width
+            )
+        );
+
+        const padding = {
+            top: 32,
+            right: 30,
+            bottom: 52,
+            left: Math.ceil(maximumLabelWidth) + 52
+        };
+
+        const chartWidth =
+            width - padding.left - padding.right;
+
+        const chartHeight =
+            height - padding.top - padding.bottom;
 
         drawGrid(
             width,
@@ -237,8 +262,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function drawPoints(coordinates) {
-        coordinates.forEach(coordinate => {
+        const maximumVisiblePoints = 24;
+
+        const interval = Math.max(
+            1,
+            Math.ceil(
+                coordinates.length / maximumVisiblePoints
+            )
+        );
+
+        coordinates.forEach((coordinate, index) => {
+            const isFirstPoint = index === 0;
+
+            const isLastPoint =
+                index === coordinates.length - 1;
+
+            const shouldDisplay =
+                index % interval === 0
+                || isFirstPoint
+                || isLastPoint;
+
+            if (!shouldDisplay) {
+                return;
+            }
+
             context.beginPath();
+
             context.arc(
                 coordinate.x,
                 coordinate.y,
@@ -246,8 +295,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 0,
                 Math.PI * 2
             );
+
             context.fillStyle = "#08110f";
             context.fill();
+
             context.lineWidth = 2;
             context.strokeStyle = "#45e6a8";
             context.stroke();
@@ -281,15 +332,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function compactCurrency(value) {
-        if (value >= 1000000) {
-            return `R$ ${(value / 1000000).toFixed(1)} mi`;
-        }
-
-        if (value >= 1000) {
-            return `R$ ${(value / 1000).toFixed(1)} mil`;
-        }
-
-        return `R$ ${value.toFixed(0)}`;
+        return new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+            notation: "compact",
+            maximumFractionDigits: 1
+        }).format(value);
     }
 
     function showTooltip(event) {
