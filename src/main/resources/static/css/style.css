@@ -307,6 +307,17 @@ select:focus {
     font-size: 0.86rem;
 }
 
+.success-alert a {
+    margin-left: 5px;
+    color: var(--text);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.success-alert a:hover {
+    text-decoration: underline;
+}
+
 .success-alert strong {
     color: var(--text);
 }

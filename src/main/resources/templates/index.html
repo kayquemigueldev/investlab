@@ -57,6 +57,21 @@
                         th:text="${simulationError}"
                 ></div>
 
+                <div
+                        class="success-alert"
+                        th:if="${created == true and savedSimulationId != null}"
+                >
+                    Simulação calculada e salva com sucesso.
+
+                    <a
+                            th:href="@{/history/{id}(
+                id=${savedSimulationId}
+            )}"
+                    >
+                        Abrir detalhes
+                    </a>
+                </div>
+
                 <div class="form-grid">
                     <div class="field">
                         <label for="initialInvestment">

@@ -1,5 +1,7 @@
 package com.kayque.investlab.web.controller;
 
+import com.kayque.investlab.application.dto.SimulationDetails;
+import com.kayque.investlab.application.dto.SimulationHistoryItem;
 import com.kayque.investlab.application.service.SimulationHistoryService;
 import com.kayque.investlab.domain.enums.ContributionTiming;
 import com.kayque.investlab.domain.enums.RatePeriod;
@@ -9,11 +11,14 @@ import com.kayque.investlab.domain.model.SimulationResult;
 import com.kayque.investlab.domain.service.CompoundInterestSimulationService;
 import com.kayque.investlab.web.form.SimulationForm;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 public class SimulationController {
@@ -30,13 +35,56 @@ public class SimulationController {
     }
 
     @GetMapping("/")
-    public String showSimulator(Model model) {
+    public String showSimulator(
+            @RequestParam(required = false) Long simulationId,
+            @RequestParam(defaultValue = "false") boolean created,
+            Model model
+    ) {
+        addOptions(model);
+        model.addAttribute("created", created);
+
+        if (simulationId == null) {
+            model.addAttribute(
+                    "simulationForm",
+                    new SimulationForm()
+            );
+
+            return "index";
+        }
+
+        SimulationDetails details =
+                historyService.findDetailsById(simulationId)
+                        .orElseThrow(() ->
+                                new ResponseStatusException(
+                                        HttpStatus.NOT_FOUND,
+                                        "Simulation not found"
+                                )
+                        );
+
+        SimulationForm simulationForm =
+                createFormFromHistory(details.history());
+
         model.addAttribute(
                 "simulationForm",
-                new SimulationForm()
+                simulationForm
         );
 
-        addOptions(model);
+        model.addAttribute(
+                "result",
+                details.recalculatedResult()
+        );
+
+        model.addAttribute(
+                "comparison",
+                details.scenarioComparison()
+        );
+
+        model.addAttribute(
+                "savedSimulationId",
+                details.history().id()
+        );
+
+        model.addAttribute("created", created);
 
         return "index";
     }
@@ -63,9 +111,9 @@ public class SimulationController {
             Long savedSimulationId =
                     historyService.save(request, result);
 
-            return "redirect:/history/"
+            return "redirect:/?simulationId="
                     + savedSimulationId
-                    + "?created=true";
+                    + "&created=true";
         } catch (InvalidSimulationException exception) {
             model.addAttribute(
                     "simulationError",
@@ -74,6 +122,42 @@ public class SimulationController {
 
             return "index";
         }
+    }
+
+    private SimulationForm createFormFromHistory(
+            SimulationHistoryItem history
+    ) {
+        SimulationForm form = new SimulationForm();
+
+        form.setInitialInvestment(
+                history.initialInvestment()
+        );
+
+        form.setMonthlyContribution(
+                history.monthlyContribution()
+        );
+
+        form.setInterestRatePercentage(
+                history.interestRatePercentage()
+        );
+
+        form.setRatePeriod(
+                history.ratePeriod()
+        );
+
+        form.setStartDate(
+                history.startDate()
+        );
+
+        form.setEndDate(
+                history.endDate()
+        );
+
+        form.setContributionTiming(
+                history.contributionTiming()
+        );
+
+        return form;
     }
 
     private void addOptions(Model model) {
