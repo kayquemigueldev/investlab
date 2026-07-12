@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<section
+        th:fragment="scenarioComparison(comparison)"
+        class="comparison-section"
+>
+    <div class="comparison-heading">
+        <div>
+            <span class="eyebrow">Análise de sensibilidade</span>
+            <h2>Comparação de cenários</h2>
+            <p>
+                Veja como diferentes expectativas de rentabilidade
+                alteram a projeção final.
+            </p>
+        </div>
+    </div>
+
+    <div class="scenario-grid">
+        <article
+                th:each="scenario : ${comparison.scenarios()}"
+                class="scenario-card"
+                th:classappend="${scenario.name() == comparison.bestScenario().name()}
+                    ? ' best-scenario'
+                    : ''"
+        >
+            <div class="scenario-card-header">
+                <div>
+                    <span class="scenario-label">Cenário</span>
+                    <h3 th:text="${scenario.name()}"></h3>
+                </div>
+
+                <span
+                        th:if="${scenario.name() == comparison.bestScenario().name()}"
+                        class="best-badge"
+                >
+                    Maior projeção
+                </span>
+            </div>
+
+            <div class="scenario-rate">
+                <span>Taxa utilizada</span>
+
+                <strong
+                        th:text="|${#numbers.formatDecimal(
+                            scenario.interestRatePercentage(),
+                            1,
+                            2
+                        )}%|"
+                ></strong>
+            </div>
+
+            <div class="scenario-balance">
+                <span>Patrimônio projetado</span>
+
+                <strong
+                        th:text="${#numbers.formatCurrency(
+                            scenario.simulationResult().finalBalance()
+                        )}"
+                ></strong>
+            </div>
+
+            <div class="scenario-details">
+                <div>
+                    <span>Rendimentos</span>
+
+                    <strong
+                            th:text="${#numbers.formatCurrency(
+                                scenario.simulationResult().totalInterest()
+                            )}"
+                    ></strong>
+                </div>
+
+                <div>
+                    <span>Rentabilidade</span>
+
+                    <strong
+                            th:text="|${scenario.simulationResult()
+                                .profitabilityPercentage()}%|"
+                    ></strong>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <p class="comparison-disclaimer">
+        Os cenários são projeções matemáticas e não representam
+        garantia de rentabilidade ou recomendação de investimento.
+    </p>
+</section>
+
+</html>

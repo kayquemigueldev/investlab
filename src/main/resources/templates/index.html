@@ -9,6 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/evolution-table.css}">
     <link rel="stylesheet" th:href="@{/css/investment-chart.css}">
+    <link rel="stylesheet" th:href="@{/css/scenario-comparison.css}">
 </head>
 <body>
 
@@ -238,15 +239,23 @@
     </div>
 
     <div th:if="${result != null}">
+        <div th:if="${comparison != null}">
+            <div
+                    th:replace="~{fragments/scenario-comparison
+                    :: scenarioComparison(${comparison})}"
+            ></div>
+        </div>
+
         <div
-                th:replace="~{fragments/investment-chart :: investmentChart(${result})}"
+                th:replace="~{fragments/investment-chart
+                :: investmentChart(${result})}"
         ></div>
 
         <div
-                th:replace="~{fragments/evolution-table :: evolutionTable(${result})}"
+                th:replace="~{fragments/evolution-table
+                :: evolutionTable(${result})}"
         ></div>
     </div>
-
 
 </main>
 

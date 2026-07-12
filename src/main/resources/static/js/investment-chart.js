@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     if (!canvas || !dataContainer) {
+        console.error("No canvas loaded");
         return;
     }
 
@@ -15,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }));
 
     if (points.length === 0) {
+        console.error("No points loaded");
         return;
     }
 
@@ -131,6 +133,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             context.beginPath();
             context.strokeStyle = "rgba(155, 176, 170, 0.14)";
+            context.font = "20px -apple-system, BlinkMacSystemFont, sans-serif";
+            context.lineJoin = "round";
             context.lineWidth = 1;
             context.moveTo(padding.left, y);
             context.lineTo(padding.left + chartWidth, y);

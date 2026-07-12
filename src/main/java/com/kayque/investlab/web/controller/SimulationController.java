@@ -3,8 +3,11 @@ package com.kayque.investlab.web.controller;
 import com.kayque.investlab.domain.enums.ContributionTiming;
 import com.kayque.investlab.domain.enums.RatePeriod;
 import com.kayque.investlab.domain.exception.InvalidSimulationException;
+import com.kayque.investlab.domain.model.ScenarioComparisonResult;
+import com.kayque.investlab.domain.model.SimulationRequest;
 import com.kayque.investlab.domain.model.SimulationResult;
 import com.kayque.investlab.domain.service.CompoundInterestSimulationService;
+import com.kayque.investlab.domain.service.ScenarioComparisonService;
 import com.kayque.investlab.web.form.SimulationForm;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -17,16 +20,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class SimulationController {
 
     private final CompoundInterestSimulationService simulationService;
+    private final ScenarioComparisonService comparisonService;
 
     public SimulationController(
-            CompoundInterestSimulationService simulationService
+            CompoundInterestSimulationService simulationService,
+            ScenarioComparisonService comparisonService
     ) {
         this.simulationService = simulationService;
+        this.comparisonService = comparisonService;
     }
 
     @GetMapping("/")
     public String showSimulator(Model model) {
-        model.addAttribute("simulationForm", new SimulationForm());
+        model.addAttribute(
+                "simulationForm",
+                new SimulationForm()
+        );
+
         addOptions(model);
 
         return "index";
@@ -45,19 +55,33 @@ public class SimulationController {
         }
 
         try {
+            SimulationRequest request =
+                    simulationForm.toDomain();
+
             SimulationResult result =
-                    simulationService.simulate(simulationForm.toDomain());
+                    simulationService.simulate(request);
+
+            ScenarioComparisonResult comparison =
+                    comparisonService.compare(request);
 
             model.addAttribute("result", result);
+            model.addAttribute("comparison", comparison);
         } catch (InvalidSimulationException exception) {
-            model.addAttribute("simulationError", exception.getMessage());
+            model.addAttribute(
+                    "simulationError",
+                    exception.getMessage()
+            );
         }
 
         return "index";
     }
 
     private void addOptions(Model model) {
-        model.addAttribute("ratePeriods", RatePeriod.values());
+        model.addAttribute(
+                "ratePeriods",
+                RatePeriod.values()
+        );
+
         model.addAttribute(
                 "contributionTimings",
                 ContributionTiming.values()
