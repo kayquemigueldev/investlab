@@ -310,3 +310,29 @@ select:focus {
 .success-alert strong {
     color: var(--text);
 }
+
+.header-navigation {
+    justify-content: space-between;
+}
+
+.brand-group {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.history-link {
+    padding: 9px 13px;
+    color: var(--muted);
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 0.86rem;
+    transition:
+            color 150ms ease,
+            background-color 150ms ease;
+}
+
+.history-link:hover {
+    color: var(--text);
+    background: var(--surface-light);
+}

@@ -14,9 +14,15 @@
 <body>
 
 <header class="header">
-    <div class="container">
-        <a class="brand" th:href="@{/}">InvestLab</a>
-        <span class="subtitle">Laboratório de investimentos</span>
+    <div class="container header-navigation">
+        <div class="brand-group">
+            <a class="brand" th:href="@{/}">InvestLab</a>
+            <span class="subtitle">Laboratório de investimentos</span>
+        </div>
+
+        <a class="history-link" th:href="@{/history}">
+            Ver histórico
+        </a>
     </div>
 </header>
 

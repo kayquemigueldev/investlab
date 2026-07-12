@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Histórico | InvestLab</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/history.css}">
+</head>
+<body>
+
+<header class="header">
+    <div class="container header-content">
+        <a class="brand" th:href="@{/}">InvestLab</a>
+
+        <nav class="navigation">
+            <a th:href="@{/}">Simulador</a>
+            <a class="active" th:href="@{/history}">Histórico</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container history-content">
+    <section class="history-hero">
+        <span class="eyebrow">Memória de simulações</span>
+        <h1>Histórico de projeções</h1>
+
+        <p>
+            Consulte as vinte simulações mais recentes realizadas
+            no InvestLab.
+        </p>
+    </section>
+
+    <section
+            class="empty-history"
+            th:if="${#lists.isEmpty(simulations)}"
+    >
+        <span>↗</span>
+        <h2>Nenhuma simulação encontrada</h2>
+        <p>
+            Realize sua primeira projeção para começar o histórico.
+        </p>
+
+        <a class="history-button" th:href="@{/}">
+            Criar simulação
+        </a>
+    </section>
+
+    <section
+            class="history-panel"
+            th:unless="${#lists.isEmpty(simulations)}"
+    >
+        <div class="history-panel-heading">
+            <div>
+                <h2>Simulações recentes</h2>
+
+                <p>
+                    Ordenadas da mais recente para a mais antiga.
+                </p>
+            </div>
+
+            <span
+                    class="history-count"
+                    th:text="|${#lists.size(simulations)} registros|"
+            ></span>
+        </div>
+
+        <div class="history-table-container">
+            <table class="history-table">
+                <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Realizada em</th>
+                    <th>Taxa</th>
+                    <th>Prazo</th>
+                    <th>Investido</th>
+                    <th>Rendimentos</th>
+                    <th>Saldo final</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="simulation : ${simulations}">
+                    <td>
+                        <span
+                                class="history-id"
+                                th:text="|#${simulation.id()}|"
+                        ></span>
+                    </td>
+
+                    <td
+                            th:text="${#temporals.format(
+                                simulation.createdAt(),
+                                'dd/MM/yyyy HH:mm'
+                            )}"
+                    ></td>
+
+                    <td>
+                        <strong
+                                th:text="|${#numbers.formatDecimal(
+                                    simulation.interestRatePercentage(),
+                                    1,
+                                    2
+                                )}%|"
+                        ></strong>
+
+                        <span
+                                class="rate-type"
+                                th:text="${
+                                    simulation.ratePeriod().name()
+                                        == 'MONTHLY'
+                                        ? 'Mensal'
+                                        : simulation.ratePeriod().name()
+                                            == 'ANNUAL'
+                                            ? 'Anual nominal'
+                                            : 'Anual efetiva'
+                                }"
+                        ></span>
+                    </td>
+
+                    <td
+                            th:text="|${simulation.numberOfMonths()}
+                                ${simulation.numberOfMonths() == 1
+                                    ? 'mês'
+                                    : 'meses'}|"
+                    ></td>
+
+                    <td
+                            th:text="${#numbers.formatCurrency(
+                                simulation.totalInvested()
+                            )}"
+                    ></td>
+
+                    <td class="history-positive"
+                        th:text="${#numbers.formatCurrency(
+                            simulation.totalInterest()
+                        )}"
+                    ></td>
+
+                    <td class="history-balance"
+                        th:text="${#numbers.formatCurrency(
+                            simulation.finalBalance()
+                        )}"
+                    ></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>
