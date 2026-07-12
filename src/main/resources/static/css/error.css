@@ -1,0 +1,109 @@
+.error-page {
+    width: min(100% - 32px, 760px);
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 48px 0;
+    display: grid;
+    place-items: center;
+}
+
+.error-card {
+    width: 100%;
+    padding: clamp(30px, 6vw, 64px);
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 26px;
+    background:
+            radial-gradient(
+                    circle at top,
+                    rgba(69, 230, 168, 0.09),
+                    transparent 42%
+            ),
+            rgba(16, 28, 25, 0.96);
+    box-shadow: 0 30px 100px rgba(0, 0, 0, 0.3);
+}
+
+.error-brand {
+    color: var(--primary);
+    font-size: 1.1rem;
+    font-weight: 850;
+    text-decoration: none;
+}
+
+.error-code {
+    margin: 32px 0 12px;
+    display: block;
+    color: rgba(69, 230, 168, 0.18);
+    font-size: clamp(5rem, 18vw, 10rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.08em;
+}
+
+.error-card h1 {
+    max-width: 580px;
+    margin: 0 auto;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+}
+
+.error-card p {
+    max-width: 520px;
+    margin: 18px auto 0;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.error-actions {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.primary-error-button,
+.secondary-error-button {
+    min-height: 46px;
+    padding: 0 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.primary-error-button {
+    color: #06100d;
+    background: var(--primary);
+}
+
+.primary-error-button:hover {
+    background: var(--primary-dark);
+}
+
+.secondary-error-button {
+    color: var(--text);
+    border: 1px solid var(--border);
+    background: var(--surface-light);
+}
+
+.secondary-error-button:hover {
+    border-color: rgba(69, 230, 168, 0.35);
+}
+
+@media (max-width: 500px) {
+    .error-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .primary-error-button,
+    .secondary-error-button {
+        width: 100%;
+    }
+}

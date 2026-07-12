@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Página não encontrada | InvestLab</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/error.css}">
+</head>
+<body>
+
+<main class="error-page">
+    <section class="error-card">
+        <a class="error-brand" th:href="@{/}">
+            InvestLab
+        </a>
+
+        <span class="error-code">404</span>
+
+        <h1>Essa projeção não foi encontrada.</h1>
+
+        <p>
+            O endereço pode estar incorreto ou a simulação
+            solicitada não existe mais.
+        </p>
+
+        <div class="error-actions">
+            <a class="primary-error-button" th:href="@{/}">
+                Ir para o simulador
+            </a>
+
+            <a class="secondary-error-button" th:href="@{/history}">
+                Consultar histórico
+            </a>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

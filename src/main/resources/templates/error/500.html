@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Erro inesperado | InvestLab</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/error.css}">
+</head>
+<body>
+
+<main class="error-page">
+    <section class="error-card">
+        <a class="error-brand" th:href="@{/}">
+            InvestLab
+        </a>
+
+        <span class="error-code">500</span>
+
+        <h1>Não conseguimos concluir essa operação.</h1>
+
+        <p>
+            Ocorreu um problema inesperado. Tente novamente
+            ou retorne ao simulador.
+        </p>
+
+        <div class="error-actions">
+            <a class="primary-error-button" th:href="@{/}">
+                Voltar ao simulador
+            </a>
+
+            <a
+                    class="secondary-error-button"
+                    href="javascript:location.reload()"
+            >
+                Tentar novamente
+            </a>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>
