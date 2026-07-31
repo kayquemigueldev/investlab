@@ -20,7 +20,9 @@ Simulação de juros compostos • Metas financeiras • Comparação de cenári
 
 <br>
 
-### [Acessar aplicação online](https://investlab-production-cf75.up.railway.app)
+### Demonstração
+
+https://investlab-2usr.onrender.com
 
 </div>
 
@@ -750,7 +752,7 @@ Sistemas de Informação • Desenvolvedor Java
 
 GitHub: [github.com/kayquemigueldev](https://github.com/kayquemigueldev)
 
-Portfólio: [kayquemiguel.dev](https://kayquemiguel.dev)
+Portfólio: [kayquemiguel.dev](https://kayquemiguel-dev.onrender.com)
 
 ---
 
