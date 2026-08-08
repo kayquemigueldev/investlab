@@ -22,8 +22,7 @@ Simulação de juros compostos • Metas financeiras • Comparação de cenári
 
 ### Demonstração
 
-https://investlab-2usr.onrender.com
-
+https://investlab-kayquemiguel.onrender.com
 </div>
 
 ---
@@ -686,7 +685,7 @@ Resposta esperada:
 
 A aplicação está publicada na Railway:
 
-### [investlab-production-cf75.up.railway.app](https://investlab-production-cf75.up.railway.app)
+### [investlab-kayquemiguel.onrender.comm](https://investlab-kayquemiguel.onrender.com)
 
 A infraestrutura possui dois serviços:
 
